@@ -21,6 +21,7 @@ const resources = {
       },
       rooms: {
         title: 'Our Residences',
+        viewGallery: 'View Gallery',
         oneBedroom: {
           title: '1 Bedroom',
           description: 'Elegant one-bedroom apartment with modern amenities and thoughtful design',
@@ -70,6 +71,7 @@ const resources = {
       },
       rooms: {
         title: '客室のご案内',
+        viewGallery: 'ギャラリーを見る',
         oneBedroom: {
           title: '1ベッドルーム',
           description: 'モダンな設備と思慮深いデザインのエレガントな1ベッドルームアパートメント',

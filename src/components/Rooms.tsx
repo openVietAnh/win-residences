@@ -1,11 +1,15 @@
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
+import ImageGallery from './ImageGallery';
 import oneBedroom from '@/assets/1bedroom.jpg';
 import twoBedroom from '@/assets/2bedroom.jpg';
 import commonArea from '@/assets/common-area.jpg';
 
 const Rooms = () => {
   const { t } = useTranslation();
+  const [isGalleryOpen, setIsGalleryOpen] = useState(false);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
 
   const rooms = [
     {
@@ -25,6 +29,11 @@ const Rooms = () => {
     },
   ];
 
+  const handleCardClick = (index: number) => {
+    setSelectedImageIndex(index);
+    setIsGalleryOpen(true);
+  };
+
   return (
     <section id="rooms" className="py-20 px-4 sm:px-6 lg:px-8">
       <div className="container mx-auto max-w-7xl">
@@ -36,7 +45,8 @@ const Rooms = () => {
           {rooms.map((room, index) => (
             <Card 
               key={index}
-              className="overflow-hidden group hover:shadow-xl transition-shadow duration-300"
+              className="overflow-hidden group hover:shadow-xl transition-all duration-300 cursor-pointer"
+              onClick={() => handleCardClick(index)}
             >
               <div className="relative h-64 overflow-hidden">
                 <img
@@ -45,6 +55,11 @@ const Rooms = () => {
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+                <div className="absolute inset-0 bg-black/0 group-hover:bg-black/20 transition-colors duration-300 flex items-center justify-center">
+                  <span className="text-white text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-accent px-4 py-2 rounded-full">
+                    {t('rooms.viewGallery') || 'View Gallery'}
+                  </span>
+                </div>
               </div>
               <CardContent className="p-6">
                 <h3 className="text-2xl font-bold text-foreground mb-3">
@@ -58,6 +73,17 @@ const Rooms = () => {
           ))}
         </div>
       </div>
+
+      <ImageGallery
+        images={rooms.map((room) => ({
+          src: room.image,
+          title: room.title,
+          description: room.description,
+        }))}
+        initialIndex={selectedImageIndex}
+        isOpen={isGalleryOpen}
+        onClose={() => setIsGalleryOpen(false)}
+      />
     </section>
   );
 };
