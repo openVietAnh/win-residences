@@ -2,35 +2,56 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import ImageGallery from './ImageGallery';
-import oneBedroom from '@/assets/1bedroom.jpg';
-import twoBedroom from '@/assets/2bedroom.jpg';
-import commonArea from '@/assets/common-area.jpg';
+import oneBedroom1 from '@/assets/1bedroom.jpg';
+import oneBedroom2 from '@/assets/1bedroom-2.jpg';
+import oneBedroom3 from '@/assets/1bedroom-3.jpg';
+import twoBedroom1 from '@/assets/2bedroom.jpg';
+import twoBedroom2 from '@/assets/2bedroom-2.jpg';
+import twoBedroom3 from '@/assets/2bedroom-3.jpg';
+import commonArea1 from '@/assets/common-area.jpg';
+import commonArea2 from '@/assets/common-area-2.jpg';
+import commonArea3 from '@/assets/common-area-3.jpg';
 
 const Rooms = () => {
   const { t } = useTranslation();
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [selectedRoomIndex, setSelectedRoomIndex] = useState(0);
 
   const rooms = [
     {
-      image: oneBedroom,
+      coverImage: oneBedroom1,
       title: t('rooms.oneBedroom.title'),
       description: t('rooms.oneBedroom.description'),
+      images: [
+        { src: oneBedroom1, alt: 'One Bedroom - Main View' },
+        { src: oneBedroom2, alt: 'One Bedroom - Bedroom' },
+        { src: oneBedroom3, alt: 'One Bedroom - Bathroom' },
+      ],
     },
     {
-      image: twoBedroom,
+      coverImage: twoBedroom1,
       title: t('rooms.twoBedroom.title'),
       description: t('rooms.twoBedroom.description'),
+      images: [
+        { src: twoBedroom1, alt: 'Two Bedroom - Main View' },
+        { src: twoBedroom2, alt: 'Two Bedroom - Living Area' },
+        { src: twoBedroom3, alt: 'Two Bedroom - Master Bedroom' },
+      ],
     },
     {
-      image: commonArea,
+      coverImage: commonArea1,
       title: t('rooms.commonArea.title'),
       description: t('rooms.commonArea.description'),
+      images: [
+        { src: commonArea1, alt: 'Common Area - Main Space' },
+        { src: commonArea2, alt: 'Common Area - Lounge' },
+        { src: commonArea3, alt: 'Common Area - Reception' },
+      ],
     },
   ];
 
   const handleCardClick = (index: number) => {
-    setSelectedImageIndex(index);
+    setSelectedRoomIndex(index);
     setIsGalleryOpen(true);
   };
 
@@ -50,7 +71,7 @@ const Rooms = () => {
             >
               <div className="relative h-64 overflow-hidden">
                 <img
-                  src={room.image}
+                  src={room.coverImage}
                   alt={room.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                 />
@@ -75,12 +96,12 @@ const Rooms = () => {
       </div>
 
       <ImageGallery
-        images={rooms.map((room) => ({
-          src: room.image,
-          title: room.title,
-          description: room.description,
-        }))}
-        initialIndex={selectedImageIndex}
+        images={rooms[selectedRoomIndex]?.images.map((img) => ({
+          src: img.src,
+          title: img.alt,
+          description: '',
+        })) || []}
+        initialIndex={0}
         isOpen={isGalleryOpen}
         onClose={() => setIsGalleryOpen(false)}
       />

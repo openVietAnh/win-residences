@@ -82,16 +82,6 @@ const ImageGallery = ({ images, initialIndex, isOpen, onClose }: ImageGalleryPro
               />
             </div>
 
-            {/* Image info */}
-            <div className="text-center mt-6 space-y-2 max-w-2xl">
-              <h3 className="text-2xl md:text-3xl font-bold text-white">
-                {currentImage.title}
-              </h3>
-              <p className="text-white/80 text-sm md:text-base">
-                {currentImage.description}
-              </p>
-            </div>
-
             {/* Counter */}
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/80 text-sm">
               {currentIndex + 1} / {images.length}
