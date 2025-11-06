@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import heroImage from "@/assets/hero-image.jpg";
 
 const Hero = () => {
   const { t } = useTranslation();
@@ -19,7 +18,7 @@ const Hero = () => {
     >
       <div
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: `url(${heroImage})` }}
+        style={{ backgroundImage: 'url(/assets/hero-image.jpg)' }}
       >
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/30 to-black/60" />
       </div>
