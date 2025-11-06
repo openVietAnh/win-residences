@@ -2,97 +2,36 @@ import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Card, CardContent } from '@/components/ui/card';
 import ImageGallery from './ImageGallery';
+import oneBedroom1 from '@/assets/1bedroom.jpg';
+import twoBedroom1 from '@/assets/2bedroom.jpg';
+import commonArea1 from '@/assets/common-area.jpg';
 
-// Image data structure for each room type
-const roomImageData = {
-  oneBedroom: {
-    coverImage: '/assets/1bedroom.jpg',
-    subSections: {
-      'Balcony (301,401,501,601)': [
-        'image-01.jpg',
-        'image 02 - Living room.jpg',
-        'image 03 - Balcony.jpg',
-        'image 04 - Bedroom.jpg',
-        'image 05 - Bedroom.jpg',
-        'image 06 - Kitchen.jpg',
-        'image 07 - Kitchen.jpg',
-        'image 08 - Kitchen.jpg',
-        'image 09 - Bathroom.jpg',
-        'image 10 - Bathroom.jpg',
-        'image 11- Bathroom.jpg',
-      ],
-      'Light well view (102)': [
-        'image 01 - living room.jpg',
-        'image 02 - bed room .jpg',
-        'image 03 - bed room .jpg',
-        'image 04- Kitchen.jpg',
-        'image 05- Kitchen .jpg',
-        'image 06 - Bathroom.jpg',
-        'image 07 - Bathroom.jpg',
-      ],
-      'No balcony (201)': [
-        'image 01 - Living room.jpg',
-        'image 02 - Bedroom.jpg',
-        'image 03 - Bedroom.jpg',
-        'image 04 - Kitchen.jpg',
-        'image 05 - Kitchen.jpg',
-        'image 06 - Bathroom.jpg',
-        'image 07 - Bathroom.jpg',
-        'image 08 - Bathroom.jpg',
-      ],
-    },
-  },
-  twoBedroom: {
-    coverImage: '/assets/2bedroom.jpg',
-    subSections: {
-      'Light well view (202,302,402,502,602)': [
-        'image 01 - Living room.jpg',
-        'image 02 - Bedroom1.jpg',
-        'image 02.1- Ensuite bathroom in bedroom 1.jpg',
-        'image 03 - Bedroom2.jpg',
-        'image 04 - Bedroom2.jpg',
-        'image 05 - Bedroom2.jpg',
-        'image 05.1 - 2nd Bedroom opposite Bedroom 2.jpg',
-        'image 05.2 - 2nd Bedroom opposite Bedroom 2.jpg',
-        'image 06 - Kitchen.jpg',
-        'image 08 - Kitchen.jpg',
-      ],
-      'Penthouse (701)': [
-        'image 01 - Living room  .jpg',
-        'image 02 - Living room  .jpg',
-        'image 03 - Living room.jpg',
-        'image 03.1 - Terrace.jpg',
-        'image 03.2 - Terrace.jpg',
-        'image 04 - Bedroom.jpg',
-        'image 05 - Bedroom 1.jpg',
-        'image 05.1 - Bathroom 1.jpg',
-        'image 05.2 - Bathroom 1.jpg',
-        'image 06 - Bedroom 2.jpg',
-        'image 06.1 - Bathroom 2.jpg',
-        'image 06.2 - Bathroom 2.jpg',
-        'image 06.3 - Bathroom2.jpg',
-        'image 07 - Kitchen.jpg',
-        'image 08 - Kitchen.jpg',
-      ],
-    },
-  },
-  commonArea: {
-    coverImage: '/assets/common-area.jpg',
-    subSections: {
-      'Common areas': [
-        'c01 - Front of the Building .jpg',
-        'c02 - Front of the Building.jpg',
-        'c02.1 - Front of the buiding.jpg',
-        'c03 - Seating Area.jpg',
-        'c04 - Public Lockers.jpg',
-        'c04.1 - Basement.JPG',
-        'c04.2 - Basement.JPG',
-        'c05 - Hallway & Elevator.jpg',
-        'c06 - Hallway & Elevator.jpg',
-        'c07 - Smart Door Lock.jpg',
-      ],
-    },
-  },
+// Dynamically import all images from sub-folders
+const oneBedroomImages = import.meta.glob('@/assets/1bedroom/**/*.{jpg,JPG,jpeg,JPEG,png,PNG}', { eager: true, as: 'url' });
+const twoBedroomImages = import.meta.glob('@/assets/2 bedrooms/**/*.{jpg,JPG,jpeg,JPEG,png,PNG}', { eager: true, as: 'url' });
+const commonAreaImages = import.meta.glob('@/assets/Common areas/**/*.{jpg,JPG,jpeg,JPEG,png,PNG}', { eager: true, as: 'url' });
+
+// Helper function to group images by sub-folder
+const groupImagesByFolder = (images: Record<string, string>) => {
+  const groups: Record<string, { src: string; alt: string }[]> = {};
+  
+  Object.entries(images).forEach(([path, src]) => {
+    // Extract folder name from path
+    const pathParts = path.split('/');
+    const folderName = pathParts[pathParts.length - 2]; // Get the immediate parent folder
+    const fileName = pathParts[pathParts.length - 1];
+    
+    if (!groups[folderName]) {
+      groups[folderName] = [];
+    }
+    
+    groups[folderName].push({
+      src,
+      alt: fileName.replace(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/, ''),
+    });
+  });
+  
+  return groups;
 };
 
 const Rooms = () => {
@@ -100,44 +39,40 @@ const Rooms = () => {
   const [isGalleryOpen, setIsGalleryOpen] = useState(false);
   const [selectedRoomIndex, setSelectedRoomIndex] = useState(0);
 
+  // Group images by sub-folders
+  const oneBedroomGroups = useMemo(() => groupImagesByFolder(oneBedroomImages), []);
+  const twoBedroomGroups = useMemo(() => groupImagesByFolder(twoBedroomImages), []);
+  const commonAreaGroups = useMemo(() => groupImagesByFolder(commonAreaImages), []);
+
   const rooms = useMemo(() => [
     {
-      coverImage: roomImageData.oneBedroom.coverImage,
+      coverImage: oneBedroom1,
       title: t('rooms.oneBedroom.title'),
       description: t('rooms.oneBedroom.description'),
-      subSections: Object.entries(roomImageData.oneBedroom.subSections).map(([title, fileNames]) => ({
+      subSections: Object.entries(oneBedroomGroups).map(([title, images]) => ({
         title,
-        images: fileNames.map(fileName => ({
-          src: `/assets/1bedroom/${title}/${fileName}`,
-          alt: fileName.replace(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/, ''),
-        })),
+        images,
       })),
     },
     {
-      coverImage: roomImageData.twoBedroom.coverImage,
+      coverImage: twoBedroom1,
       title: t('rooms.twoBedroom.title'),
       description: t('rooms.twoBedroom.description'),
-      subSections: Object.entries(roomImageData.twoBedroom.subSections).map(([title, fileNames]) => ({
+      subSections: Object.entries(twoBedroomGroups).map(([title, images]) => ({
         title,
-        images: fileNames.map(fileName => ({
-          src: `/assets/2 bedrooms/${title}/${fileName}`,
-          alt: fileName.replace(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/, ''),
-        })),
+        images,
       })),
     },
     {
-      coverImage: roomImageData.commonArea.coverImage,
+      coverImage: commonArea1,
       title: t('rooms.commonArea.title'),
       description: t('rooms.commonArea.description'),
-      subSections: Object.entries(roomImageData.commonArea.subSections).map(([title, fileNames]) => ({
+      subSections: Object.entries(commonAreaGroups).map(([title, images]) => ({
         title,
-        images: fileNames.map(fileName => ({
-          src: `/assets/Common areas/${fileName}`,
-          alt: fileName.replace(/\.(jpg|JPG|jpeg|JPEG|png|PNG)$/, ''),
-        })),
+        images,
       })),
     },
-  ], [t]);
+  ], [t, oneBedroomGroups, twoBedroomGroups, commonAreaGroups]);
 
   const handleCardClick = (index: number) => {
     setSelectedRoomIndex(index);
