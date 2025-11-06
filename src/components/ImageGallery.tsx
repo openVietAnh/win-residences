@@ -75,16 +75,16 @@ const ImageGallery = ({ subSections, isOpen, onClose }: ImageGalleryProps) => {
           </Button>
 
           {/* Sections selector - Top on mobile, Left sidebar on desktop */}
-          <div className="md:w-64 bg-black/50 backdrop-blur-sm border-b md:border-b-0 md:border-r border-white/10 overflow-x-auto md:overflow-y-auto p-3 md:p-4 flex-shrink-0">
+          <div className="md:w-64 bg-black/50 backdrop-blur-sm border-b md:border-b-0 md:border-r border-white/10 overflow-y-auto p-3 md:p-4 flex-shrink-0 max-h-48 md:max-h-full">
             <h3 className="text-white font-semibold mb-3 md:mb-4 text-xs md:text-sm uppercase tracking-wider hidden md:block">
               Sections
             </h3>
-            <div className="flex md:flex-col gap-2 md:space-y-2 md:gap-0">
+            <div className="flex flex-col gap-2">
               {subSections.map((subSection, index) => (
                 <button
                   key={index}
                   onClick={() => handleSubSectionChange(index)}
-                  className={`flex-shrink-0 whitespace-nowrap md:w-full text-left px-3 md:px-4 py-2 md:py-3 rounded-lg transition-all ${
+                  className={`w-full text-left px-3 md:px-4 py-2 md:py-3 rounded-lg transition-all ${
                     index === selectedSubSection
                       ? 'bg-accent text-white'
                       : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
