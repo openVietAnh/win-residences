@@ -63,7 +63,7 @@ const ImageGallery = ({ subSections, isOpen, onClose }: ImageGalleryProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-7xl w-full p-0 bg-black/95 border-none">
-        <div className="relative w-full h-[90vh] flex">
+        <div className="relative w-full h-[90vh] flex flex-col md:flex-row">
           {/* Close button */}
           <Button
             onClick={onClose}
@@ -74,43 +74,43 @@ const ImageGallery = ({ subSections, isOpen, onClose }: ImageGalleryProps) => {
             <X className="h-6 w-6" />
           </Button>
 
-          {/* Left sidebar - Sub-sections */}
-          <div className="w-64 bg-black/50 backdrop-blur-sm border-r border-white/10 overflow-y-auto p-4 flex-shrink-0">
-            <h3 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">
+          {/* Sections selector - Top on mobile, Left sidebar on desktop */}
+          <div className="md:w-64 bg-black/50 backdrop-blur-sm border-b md:border-b-0 md:border-r border-white/10 overflow-x-auto md:overflow-y-auto p-3 md:p-4 flex-shrink-0">
+            <h3 className="text-white font-semibold mb-3 md:mb-4 text-xs md:text-sm uppercase tracking-wider hidden md:block">
               Sections
             </h3>
-            <div className="space-y-2">
+            <div className="flex md:flex-col gap-2 md:space-y-2 md:gap-0">
               {subSections.map((subSection, index) => (
                 <button
                   key={index}
                   onClick={() => handleSubSectionChange(index)}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-all ${
+                  className={`flex-shrink-0 whitespace-nowrap md:w-full text-left px-3 md:px-4 py-2 md:py-3 rounded-lg transition-all ${
                     index === selectedSubSection
                       ? 'bg-accent text-white'
                       : 'bg-white/5 text-white/70 hover:bg-white/10 hover:text-white'
                   }`}
                 >
-                  <span className="text-sm">{subSection.title}</span>
+                  <span className="text-xs md:text-sm">{subSection.title}</span>
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Right side - Image viewer */}
-          <div className="flex-1 relative flex items-center justify-center">
+          {/* Image viewer */}
+          <div className="flex-1 relative flex items-center justify-center min-h-0">
             {/* Previous button */}
             <Button
               onClick={handlePrevious}
               variant="ghost"
               size="icon"
-              className="absolute left-4 top-1/2 -translate-y-1/2 z-40 text-white hover:bg-white/20 rounded-full h-12 w-12"
+              className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-40 text-white hover:bg-white/20 rounded-full h-10 w-10 md:h-12 md:w-12"
             >
-              <ChevronLeft className="h-8 w-8" />
+              <ChevronLeft className="h-6 w-6 md:h-8 md:w-8" />
             </Button>
 
             {/* Image */}
-            <div className="relative w-full h-full flex flex-col items-center justify-center p-4 md:p-8">
-              <div className="relative w-full h-full max-h-[75vh] flex items-center justify-center">
+            <div className="relative w-full h-full flex flex-col items-center justify-center p-2 md:p-8">
+              <div className="relative w-full h-full max-h-[60vh] md:max-h-[75vh] flex items-center justify-center">
                 <img
                   src={currentImage.src}
                   alt={currentImage.alt}
@@ -120,7 +120,7 @@ const ImageGallery = ({ subSections, isOpen, onClose }: ImageGalleryProps) => {
               </div>
 
               {/* Counter */}
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/80 text-sm">
+              <div className="absolute bottom-2 md:bottom-4 left-1/2 -translate-x-1/2 text-white/80 text-xs md:text-sm bg-black/50 px-2 py-1 rounded">
                 {currentIndex + 1} / {images.length}
               </div>
             </div>
@@ -130,18 +130,18 @@ const ImageGallery = ({ subSections, isOpen, onClose }: ImageGalleryProps) => {
               onClick={handleNext}
               variant="ghost"
               size="icon"
-              className="absolute right-4 top-1/2 -translate-y-1/2 z-40 text-white hover:bg-white/20 rounded-full h-12 w-12"
+              className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-40 text-white hover:bg-white/20 rounded-full h-10 w-10 md:h-12 md:w-12"
             >
-              <ChevronRight className="h-8 w-8" />
+              <ChevronRight className="h-6 w-6 md:h-8 md:w-8" />
             </Button>
 
             {/* Thumbnail strip */}
-            <div className="absolute bottom-20 left-1/2 -translate-x-1/2 flex gap-2 max-w-full overflow-x-auto px-4 pb-2">
+            <div className="absolute bottom-12 md:bottom-20 left-1/2 -translate-x-1/2 flex gap-2 max-w-full overflow-x-auto px-4 pb-2 scrollbar-hide">
               {images.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setCurrentIndex(index)}
-                  className={`flex-shrink-0 w-16 h-16 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all ${
+                  className={`flex-shrink-0 w-12 h-12 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded overflow-hidden border-2 transition-all ${
                     index === currentIndex
                       ? 'border-accent scale-110'
                       : 'border-white/20 opacity-60 hover:opacity-100'
